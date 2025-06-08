@@ -1,1 +1,494 @@
+﻿Міністерство освіти і науки України 
+Харківський національний університет радіоелектроніки
+
+
+
+
+
+Кафедра «Програмної інженерії»
+
+
+
+
+
+
+
+Звіт з лабораторної роботи № 2
+з дисципліни «Архітектура програмного забезпечення»
+на тему:  «РОЗРОБКА СЕРВЕРНОЇ ЧАСТИНИ СИСТЕМИ»
+
+
+
+
+Виконала	
+ст. гр. ПЗПІ-22-2	
+Білоус Дар’я Олександрівна	 
+
+
+Перевірив
+ст. викладач кафедри ПІ
+Сокорчук Ігор Петрович
+
+
+
+
+
+
+
+
+
+Харків 2025
+
+
+1 ІСТОРІЯ ЗМІН
+
+№ДатаВерсія звітуОпис змін та виправлень122.04.20250.1Створено звіт по шаблону.
+2 ЗАВДАННЯ
+Допрацювати серверну частину, яка була розроблена в минулому семестрі. Звіт слід експортувати у формат PDF і завантажити на платформу dl.nure.ua, а також у форматі простого текстового файлу з кодуванням UTF-8 для розміщення в GitHub-репозиторії.
+3 ОПИС ВИКОНАНОЇ РОБОТИ
+Під час виконання лабораторної роботи була використана серверна частина, що була розроблена в минулому семестрі. Для розробки серверної частини використовувалася платформа Node JS, фреймворк Express JS та мова програмування TypeScript. У якості СУБД обрано реляційну базу даних PostgreSQL. Взаємодія з базою даних відбувається за допомогою ORM Sequelize.
+Архітектура розробленої серверної частини є тришаровою, тому що містить: шар представлення (контроллери), шар прикладної логіки (репозиторії та сервіси) та шар роботи з даними (моделі). 
+     Посилання на відеозапис знаходиться в додатку А.
+     ER-діаграма наведена в додатку Б на рисунку Б.1. Структура бази даних наведена на діаграмі в додатку Б на рисунку Б.2. UML-діаграма прецедентів знаходиться на рисунку Б.3, а діаграма розгортання на рисунку Б.4.
+     
+
+4 ВИСНОВКИ
+У результаті виконання лабораторної роботи було покращено серверну частину програмної системи, що була розроблена в минулому семестрі..
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ДОДАТОК А
+Відеозапис 
+
+Відеозапис презентації результатів лабораторної роботи: https://youtu.be/dj_qZK7tLLQ 
+Хронологічний опис відеозапису:
+0:00 Вступ. Представлення. 
+0:23 Вхід до системи. Авторизація. 
+1:25 Оформлення підписки на сервіс.
+2:25 Реєстрація підприємства у системі. Створення компанії. 
+3:07 Додавання працівників до підприємства. 
+3:43 Обробка даних про фізичний стан працівників. 
+4:33 Додавання діяльності, додавання працівників до діяльності 
+5:51 Обробка даних про фізичний стан працівників. До серверної частини будуть надходити дані про фізичні показники робітників 
+7:16 Перегляд доданих діяльностей до системи 
+8:09 Розподіл працівників по виду діяльності. В залежності від виду діяльності, необхідної кількості персоналу, стану кожного працівника, система буде робити оптимальний розподіл для того, щоб забезпечити продуктивність підприємства 
+9:25 Локалізація системи 
+10:03 Забезпечення захисту даних 
+10:15 Експорт та імпорт даних з БД
+
+
+
+
+ДОДАТОК Б
+ГРАФІЧНІ МАТЕРІАЛИ
+
+
+
+Рисунок Б.1 — ER-діаграма даних
+
+
+
+Рисунок Б.2 — Структура бази даних
+
+
+Рисунок Б.3 — UML-діаграма прецедентів
+
+
+Рисунок Б.4 — Діаграма розгортання
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ДОДАТОК В
+Програмний код
+
+В.1 Математична обробка прикладних даних
+GitHub репозиторій: https://github.com/NureBilousDaria/apz-pzpi-22-2-bilous-daria/blob/main/Lab%202/pzpi-22-2-bilous-daria-lab2-code/src/core/common/classes/TimeTableManager.ts 
+1.	export default class TimeTableManager { 
+2.
+3.	private _activities: ActivityDomainModel[];
+4.	private _scannerHistory: ScannerHistoryDomainModel;
+5.	private _coefficientsArray!: CoefficientsData[]; 6.
+7.	constructor(
+8.	activities: ActivityDomainModel[],
+9.	scannerHistory: ScannerHistoryDomainModel
+10.	) {
+11.	this._activities = activities;
+12.	this._scannerHistory = scannerHistory;
+13.	this._coefficientsArray = 14.this.getCoefficientsArray();
+15.	}
+16.
+17.	public getOptimalActivity(): number {
+18.	const maxCoefficientData = 19.this.getCoefficientsWithMaxData(this._coefficientsArray); 20.
+21.	
+22.	for (let i = 0; i < this._coefficientsArray.length;
+23.	i++) {
+24.	this._coefficientsArray[i].totalCoefficient =
+25.	
+26.	this._coefficientsArray[i].complexityCoefficient / 27.maxCoefficientData.complexityCoefficient +
+28.	this._coefficientsArray[i].pulseCoefficient
+29.	/ maxCoefficientData.pulseCoefficient + 30.
+31.this._coefficientsArray[i].temperatureCoefficient / 32.maxCoefficientData.temperatureCoefficient +
+33.
+34.this._coefficientsArray[i].complexityCoefficient / 35.maxCoefficientData.complexityCoefficient;
+36.	}
+37.
+38.	this._coefficientsArray = 39.this._coefficientsArray.sort((a, b) => b.totalCoefficient 40.a.totalCoefficient);
+
+
+41.
+42.	return this._coefficientsArray[0].activityId;
+43.	
+44.	}
+45.
+46.	private getCoefficientsArray() {
+47.	let coefficientsArray: CoefficientsData[] = [];
+ 
+
+48.	
+49.	for (let i = 0; i < this._activities.length; i++) { 50.
+51.	let coefficientsData = new CoefficientsData(
+52.	this._activities[i].id,
+53.	
+54.	this.getTemperatureCoefficient(this._scannerHistory.temperature), 55.
+56.this.getPulseCoefficients(this._scannerHistory.pulse), 57.
+58.this.getActiveWorkCoefficients(this._scannerHistory.activeWo 
+59.rkedTime),
+60.	this._activities[i].complexity?.evaluation 45.||
+61
+62.	);
+63.	coefficientsArray.push(coefficientsData);
+64.	}
+65.
+66.	return coefficientsArray;
+67.	}
+68.
+69.	private getTemperatureCoefficient(temperature: number):
+70.number {
+71.	
+switch (true) {	
+72.	case (temperature	<= 36.6):
+73.	return 1;	
+74.	case (temperature	> 36.6 && temperature <= 37):
+75.	return 1.2;	
+76.	case (temperature	> 37 && temperature <= 37.5):
+77.	return 1.5;	
+78.	case (temperature	> 37.5 && temperature <= 38):
+79.	return 2;	
+80.	case (temperature	> 38 && temperature <= 38.5):
+81.	return 3;	
+82.	case (temperature	> 38.5 && temperature <= 39):
+
+
+83.	return 4;	
+84.	default:	
+85.	return 5;	
+86.	}	
+87.	}
+88.	
+89.	private getPulseCoefficients(pulse: number): number {
+90.	switch (true) {
+91.	case (pulse <= 60):
+92.	return 1;
+93.	case (pulse > 60 && pulse <= 80):
+94.	return 1.2;
+95.	case (pulse > 80 && pulse <= 100):
+96.	return 1.5;
+97.	case (pulse > 100 && pulse <= 120):
+98.	return 2;
+99.	case (pulse > 120 && pulse <= 140):
+100.	return 3;
+101.			case (pulse > 140 && pulse <= 160):
+102.			return 4;
+103.			default:
+104.			return 5;
+105.		}	
+106.	}		
+107.			
+108.	private 109.getActiveWorkCoefficients(activeWorkTimeInSeconds: number): 110.number {
+111.	const activeWorkTimeInHours = 112.activeWorkTimeInSeconds;
+113.	switch (true) {
+114.	case (activeWorkTimeInHours <= 7200):
+115.	return 1;
+116.	case (activeWorkTimeInHours > 7200 &&
+117.	activeWorkTimeInHours <= 14400):
+118.	return 1.2;
+119.	case (activeWorkTimeInHours > 14400 &&
+120.	activeWorkTimeInHours <= 21600):
+121.	return 1.5;
+122.	case (activeWorkTimeInHours > 21600 &&
+123.	activeWorkTimeInHours <= 28800):
+124.	return 2;
+125.	case (activeWorkTimeInHours > 28800 &&
+126.	activeWorkTimeInHours <= 36000):
+127.	return 3;
+128.	case (activeWorkTimeInHours > 36000 &&
+
+
+129.	activeWorkTimeInHours <= 43200):
+130.	return 4;
+131.	default:
+132.	return 5;
+133.	}
+134.	}
+135.
+136.
+137.	private getCoefficientsWithMaxData(coefficientsArray: 138.CoefficientsData[]) {
+139.	let maxPulseCoefficient = Number.MIN_SAFE_INTEGER;
+140.	let maxTemperatureCoefficient = 141.Number.MIN_SAFE_INTEGER;
+142.	let maxActiveWorkTimeCoefficient = 143.Number.MIN_SAFE_INTEGER;
+144.	let maxComplexityCoefficient = 145.Number.MIN_SAFE_INTEGER;
+146.
+147.	for (let i = 0; i < coefficientsArray.length; i++) 148.{
+149.	if (maxPulseCoefficient < 150.coefficientsArray[i].pulseCoefficient) {
+151.	maxPulseCoefficient = 152.coefficientsArray[i].pulseCoefficient;
+153.	}
+ 
+
+154.
+155.	if (maxTemperatureCoefficient < 156.coefficientsArray[i].temperatureCoefficient) {
+157.	maxTemperatureCoefficient = 158.coefficientsArray[i].temperatureCoefficient;
+159.	}
+160.
+161.	if (maxActiveWorkTimeCoefficient < 162.coefficientsArray[i].workTimeCoefficient) {
+163.	maxActiveWorkTimeCoefficient = 164.coefficientsArray[i].workTimeCoefficient;
+165.	}
+166.
+167.	if (maxComplexityCoefficient < 168.coefficientsArray[i].complexityCoefficient) {
+169.	maxComplexityCoefficient = 170.coefficientsArray[i].complexityCoefficient;
+171.	}
+172.	}
+173.
+
+
+174.	return new CoefficientsData(
+175.	0,
+176.	maxTemperatureCoefficient,
+177.	maxPulseCoefficient,
+178.	maxActiveWorkTimeCoefficient,
+179.	maxComplexityCoefficient
+180.	);
+181.
+182.	}
+183.
+184. }
+
+В.2 Адміністрування бізнес-логіки системи
+GitHub репозиторій: https://github.com/NureBilousDaria/apz-pzpi-22-2-bilous-daria/blob/main/Lab%202/pzpi-22-2-bilous-daria-lab2-code/src/core/services/AdminUserService/AdminUserService.ts 
+1. public async createUser(dto: CreateUserDto):
+2. Promise<UserDomainModel> {
+3.  if (await this.isUserWithEmailExits(dto.email)) {
+4.             throw ApiError.conflict(i18n.__('userWithThisEmailExisted'));
+5.         }
+6.         let fileName: string = DEFAULT_USER_IMAGE_NAME;
+7.         if (dto.userImage !== DEFAULT_USER_IMAGE_NAME) {
+8.             fileName = await this.fileManager.createFile(dto.userImage);
+9.         }
+10.         const hashedPassword = bcrypt.hashSync(dto.password, 5);
+11.
+12.         return await this.userRepository.createUser(dto, fileName, hashedPassword);
+13.     }
+14.
+15.     public async getAllUsers(
+16.         roleTitle: string,
+17.         email: string,
+18.         sortBy: string,
+19.         offset: number,
+20.         limit: number) {
+21.         let users: UserDomainModel[] = [];
+22.         if (email) {
+23.             const user = await this.userRepository.getUserByEmail(email);
+24.             if (user) {
+25.                 users.push(user);
+26.             }
+27.         }
+28.
+29.         if (roleTitle) {
+30.             users = await this.userRepository.getUsersByRole(roleTitle);
+31.         }
+32.
+33.         if (!roleTitle && !email) {
+34.             users = await this.userRepository.getAllUsers();
+35.         }
+36.
+37.         if (sortBy) {
+38.             if (sortBy ===  'asc') {
+39.                 users.sort((a, b) => a.secondName.localeCompare(b.secondName));
+40.             } else if (sortBy === 'desc') {
+41.                 users.sort((a, b) => b.secondName.localeCompare(a.secondName));
+42.             }
+43.         }
+44.
+45.         const pagination: PaginationClass<UserDomainModel> = new PaginationClass();
+46.         console.log(offset);
+47.         const paginatedUser = pagination.paginateItems(users, offset, limit);
+48.         return paginatedUser;
+49.     }
+50.
+51.     public async getUserById(id: number) {
+52.         const user = await this.userRepository.getUserById(id);
+53.         if (!user) {
+54.             throw ApiError.notFound(i18n.__('userNotFound'));
+55.         }
+56.         const roles = await this.userRepository.getUserRoles(id);
+57.         const educations = await this.userRepository.getUserEducations(id);
+58.         return { user, roles, educations};
+59.     }
+60.
+61.     public async updateUser(id: number, dto: UpdateUserAdminDto): Promise<UserDomainModel> {
+62.         console.log(`Id: ${id}`)
+63.         const user = await this.userRepository.getUserById(id);
+64.
+65.         if (!user) {
+66.             throw ApiError.notFound(i18n.__('userNotFound'));
+67.         }
+68.
+69.         if (await this.isUserWithEmailExits(dto.email) && dto.email !== user.email) {
+70.             throw ApiError.conflict(i18n.__('userWithThisEmailExisted'));
+71.         }
+72.
+73.         let fileName: string;
+74.         if (dto.userImage !== DEFAULT_USER_IMAGE_NAME) {
+75.             if (user.userImage !== DEFAULT_USER_IMAGE_NAME) {
+76.                 await this.fileManager.deleteFile(user.userImage);
+77.             }
+78.             fileName = await this.fileManager.createFile(dto.userImage);
+79.         } else {
+80.             fileName = user.userImage;
+81.         }
+82.
+83.         const updatedUser = await this.userRepository.updateUser(id, dto, fileName);
+84.         if (!updatedUser) {
+85.             throw ApiError.notFound(i18n.__('userNotFound'));
+86.         }
+87.         return updatedUser;
+88.     }
+89.
+90.     async deleteUserById(id: number): Promise<void> {
+91.         const deletedUser = await this.userRepository.getUserById(id);
+92.         if (deletedUser) {
+93.             if (deletedUser.userImage !== DEFAULT_USER_IMAGE_NAME) {
+94.                 await this.fileManager.deleteFile(deletedUser.userImage);
+95.             }
+96.             await this.userRepository.deleteUserById(id);
+97.         }
+98.
+99.         return;
+100.     }
+101.
+102.     async addUserRole(id: number, dto: AddOrDeleteRoleDto, addingUserRoles: string[]) {
+103.
+104.         if ((addingUserRoles.includes(RolesEnum.COMPANY_ADMIN) || addingUserRoles.includes(RolesEnum.SUBSCRIBER))
+105.             && (dto.roleTitle === RolesEnum.SUBSCRIBER || dto.roleTitle === RolesEnum.ADMIN)) {
+106.             throw ApiError.forbidden(i18n.__('youCannotAddThisRole'))
+107.         }
+108.
+109.         const user =  await this.userRepository.addUserRole(dto, id);
+110.         if (!user) {
+111.             throw ApiError.notFound(i18n.__('userNotFound'));
+112.         }
+113.         const roles = await this.userRepository.getUserRoles(id);
+114.         return {user, roles};
+115.     }
+116.
+117.     public async deleteUserRole(dto: AddOrDeleteRoleDto, userId: number, addingUserRoles: string[]) {
+118.         console.log(addingUserRoles)
+119.         if ((addingUserRoles.includes(RolesEnum.COMPANY_ADMIN) || addingUserRoles.includes(RolesEnum.SUBSCRIBER) && !addingUserRoles.includes(RolesEnum.ADMIN))
+120.             && (dto.roleTitle === RolesEnum.SUBSCRIBER || dto.roleTitle === RolesEnum.ADMIN)) {
+121.             throw ApiError.forbidden(i18n.__('youCannotDeleteThisRole'))
+122.         }
+123.
+124.         if (dto.roleTitle === UserRole.USER) {
+125.             throw ApiError.forbidden(i18n.__('youCannotDeleteThisRole'));
+126.         }
+127.         const user = await this.userRepository.deleteUserRole(dto, userId);
+128.         if (!user) {
+129.             throw ApiError.notFound(i18n.__('userNotFound'));
+130.         }
+131.         const roles = await this.userRepository.getUserRoles(userId);
+132.         return {user, roles};
+133.     }
+134.
+135.     private async isUserWithEmailExits(email: string): Promise<boolean> {
+136.         const candidate: UserDomainModel | null = await this.userRepository.getUserByEmail(email);
+137.         return candidate !== null;
+138.     }
+139. }
+
+В.3 Резервне копіювання користувацьких даних
+GitHub репозиторій: https://github.com/NureBilousDaria/apz-pzpi-22-2-bilous-daria/blob/main/Lab%202/pzpi-22-2-bilous-daria-lab2-code/src/infrastructure/controllers/DbController.ts 
+1. public async exportDb(req: Request, res: Response, next: NextFunction) {
+2.         try {
+3.             const exportImportDb = new ExportImportManager();
+4.             const fileName = await exportImportDb.exportData();
+5.             if (fileName === undefined) {
+6.                 return next(ApiError.internalServerError(i18n.__('unknownError')));
+7.             }
+8.             const filePath = path.join(__dirname, '..', 'database',  'dbCopy', fileName);
+9.
+10.             res.download(filePath, fileName, (err) => {
+11.                 if (err) {
+12.                     return res.status(500).send(i18n.__('sendingFileError'));
+13.                 }
+14.
+15.                 fs.unlinkSync(filePath);
+16.             });
+17.         } catch (error) {
+18.             console.log(error);
+19.             next(error);
+20.         }
+21.     }
+22.
+23.     async importDb(req: Request, res: Response, next: NextFunction) {
+24.         try {
+25.             // @ts-ignore
+26.             const file = req.files.db;
+27.
+28.             if (!file) {
+29.                 return next(ApiError.badRequest(i18n.__('thereNoFile')));
+30.             }
+31.
+32.
+33.             const filePath = path.resolve(__dirname, '..', 'database', 'dbCopy');
+34.             // @ts-ignore
+35.             fs.writeFileSync(path.join(filePath, file.name), file.data, {flag: 'w'});
+36.             const exportImportDb = new ExportImportManager();
+37.             // @ts-ignore
+38.             await exportImportDb.importData(path.resolve(filePath, file.name));
+39.             res.status(200).json({ message: i18n.__('fileUploaded') });
+40.         } catch (error) {
+41.             console.error(error);
+42.             next(error);
+43.         }
+44.     }
+45.
+46.
+47. }
 
