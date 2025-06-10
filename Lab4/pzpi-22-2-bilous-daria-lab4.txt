@@ -1,11 +1,6 @@
 ﻿Міністерство освіти і науки України 
 Харківський національний університет радіоелектроніки
-
-
-
-
-
-Кафедра «Програмної інженерії»
+Кафедра програмної інженерії
 
 
 
@@ -13,7 +8,8 @@
 
 
 
-Звіт з лабораторної роботи № 4
+ЗВІТ 
+з лабораторної роботи № 4
 з дисципліни «Архітектура програмного забезпечення»
 на тему:  «РОЗРОБКА ПРОГРАМНОЇ АРХІТЕКТУРИ, СТВОРЕННЯ ТА
 ВІДЛАГОДЖЕННЯ ПРОГРАМНОГО КОДУ МОБІЛЬНОГО КЛІЄНТА
@@ -55,9 +51,10 @@
 Додано додатки
 
 
-    2 ЗАВДАННЯ
+2 ЗАВДАННЯ
 Розробити мобільний застосунок для  платформи Android із використанням мови програмування Kotlin.
-    3 ОПИС ВИКОНАНОЇ РОБОТИ
+
+3 ОПИС ВИКОНАНОЇ РОБОТИ
 Для цієї лабораторної роботи було розроблено мобільний застосунок. У якості мови програмування було обрано Kotlin. Архітектура – MVC, тому що в структурі проєкту є моделі, які представляють дані та змінюють їх у відповідь на дії контролера, view - представляють дані для користувача,  контролери, які у відповідь на взаємодію користувача змінюють дані моделей. 
      Після закінчення розробки був створений відеозапис, посилання на який знаходиться у додатку А. 
      ER-діаграма наведена в додатку Б на рисунку Б.1. Структура бази даних наведена на діаграмі в додатку Б на рисунку Б.2. UML-діаграма прецедентів знаходиться на рисунку Б.3. 
@@ -65,7 +62,7 @@
 
 
 
-    4 ВИСНОВКИ
+4 ВИСНОВКИ
 Під час виконання лабораторної роботи був розроблений мобільний застосунок для платформи Android.
 
 
@@ -88,10 +85,10 @@
 
 ДОДАТОК А
 Відеозапис 
-
 Відеозапис презентації результатів лабораторної роботи: https://youtu.be/t72X8pjw360
 
 Хронологічний опис відеозапису:
+
 0:00 Вступ 
 00:16 Опис технологій, опис архітектури 
 00:53 Реєстрація та авторизація 
@@ -134,9 +131,10 @@
 
 ДОДАТОК В
 Програмний код
-
 В.1 Математична обробка прикладних даних
+
 GitHub репозиторій: https://github.com/NureBilousDaria/apz-pzpi-22-2-bilous-daria/blob/main/Lab%204/pzpi-22-2-bilous-daria-lab4-code/app/src/main/java/com/example/tasksyncmobileapp/view/worker/OneWorkerActivity.kt 
+
     1. package com.example.tasksyncmobileapp.view.worker
     2. 
     3. import android.content.Intent
@@ -366,7 +364,9 @@ GitHub репозиторій: https://github.com/NureBilousDaria/apz-pzpi-22-2-
 
 
 В.2 Адміністрування бізнес-логіки системи
+
 GitHub репозиторій: https://github.com/NureBilousDaria/apz-pzpi-22-2-bilous-daria/blob/main/Lab%204/pzpi-22-2-bilous-daria-lab4-code/app/src/main/java/com/example/tasksyncmobileapp/view/auth/LoginActivity.kt 
+
     1. package com.example.tasksyncmobileapp.view.auth
     2. 
     3. import android.content.Intent
@@ -439,7 +439,9 @@ GitHub репозиторій: https://github.com/NureBilousDaria/apz-pzpi-22-2-
 
 
 В.3 Резервне копіювання користувацьких даних
+
 GitHub репозиторій: https://github.com/NureBilousDaria/apz-pzpi-22-2-bilous-daria/blob/main/Lab%204/pzpi-22-2-bilous-daria-lab4-code/app/src/main/java/com/example/tasksyncmobileapp/util/classes/TokenManager.kt 
+
     1. package com.example.tasksyncmobileapp.util.classes
     2. 
     3. import android.content.Context

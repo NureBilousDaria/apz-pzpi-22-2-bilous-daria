@@ -5,7 +5,7 @@
 
 
 
-Кафедра «Програмної інженерії»
+Кафедра програмної інженерії
 
 
 
@@ -13,7 +13,8 @@
 
 
 
-Звіт з лабораторної роботи № 2
+ЗВІТ
+з лабораторної роботи № 2
 з дисципліни «Архітектура програмного забезпечення»
 на тему:  «РОЗРОБКА СЕРВЕРНОЇ ЧАСТИНИ СИСТЕМИ»
 
@@ -41,10 +42,10 @@
 
 
 1 ІСТОРІЯ ЗМІН
-
-№ДатаВерсія звітуОпис змін та виправлень122.04.20250.1Створено звіт по шаблону.
+№ДатаВерсія звітуОпис змін та виправлень122.04.20250.1Створено звіт по шаблону
 2 ЗАВДАННЯ
 Допрацювати серверну частину, яка була розроблена в минулому семестрі. Звіт слід експортувати у формат PDF і завантажити на платформу dl.nure.ua, а також у форматі простого текстового файлу з кодуванням UTF-8 для розміщення в GitHub-репозиторії.
+
 3 ОПИС ВИКОНАНОЇ РОБОТИ
 Під час виконання лабораторної роботи була використана серверна частина, що була розроблена в минулому семестрі. Для розробки серверної частини використовувалася платформа Node JS, фреймворк Express JS та мова програмування TypeScript. У якості СУБД обрано реляційну базу даних PostgreSQL. Взаємодія з базою даних відбувається за допомогою ORM Sequelize.
 Архітектура розробленої серверної частини є тришаровою, тому що містить: шар представлення (контроллери), шар прикладної логіки (репозиторії та сервіси) та шар роботи з даними (моделі). 
@@ -74,9 +75,10 @@
 
 ДОДАТОК А
 Відеозапис 
-
 Відеозапис презентації результатів лабораторної роботи: https://youtu.be/dj_qZK7tLLQ 
+
 Хронологічний опис відеозапису:
+
 0:00 Вступ. Представлення. 
 0:23 Вхід до системи. Авторизація. 
 1:25 Оформлення підписки на сервіс.
@@ -128,9 +130,10 @@
 
 ДОДАТОК В
 Програмний код
-
 В.1 Математична обробка прикладних даних
+
 GitHub репозиторій: https://github.com/NureBilousDaria/apz-pzpi-22-2-bilous-daria/blob/main/Lab%202/pzpi-22-2-bilous-daria-lab2-code/src/core/common/classes/TimeTableManager.ts 
+
 1.	export default class TimeTableManager { 
 2.
 3.	private _activities: ActivityDomainModel[];
@@ -301,7 +304,9 @@ switch (true) {
 184. }
 
 В.2 Адміністрування бізнес-логіки системи
+
 GitHub репозиторій: https://github.com/NureBilousDaria/apz-pzpi-22-2-bilous-daria/blob/main/Lab%202/pzpi-22-2-bilous-daria-lab2-code/src/core/services/AdminUserService/AdminUserService.ts 
+
 1. public async createUser(dto: CreateUserDto):
 2. Promise<UserDomainModel> {
 3.  if (await this.isUserWithEmailExits(dto.email)) {
@@ -443,7 +448,9 @@ GitHub репозиторій: https://github.com/NureBilousDaria/apz-pzpi-22-2-
 139. }
 
 В.3 Резервне копіювання користувацьких даних
+
 GitHub репозиторій: https://github.com/NureBilousDaria/apz-pzpi-22-2-bilous-daria/blob/main/Lab%202/pzpi-22-2-bilous-daria-lab2-code/src/infrastructure/controllers/DbController.ts 
+
 1. public async exportDb(req: Request, res: Response, next: NextFunction) {
 2.         try {
 3.             const exportImportDb = new ExportImportManager();
